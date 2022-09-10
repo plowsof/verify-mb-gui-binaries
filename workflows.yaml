@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Verify and print diffs
+
+# Controls when th06e workflow will run
+on:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: |
+          apt-get install -y osslsigncode unzip
+      - name: Download zips
+        run: |
+          wget -O signed/monero-gui-v0.18.1.0.zip https://p2pcrowd.fund/monero-gui-v0.18.1.0.zip
+          wget -O orig/monero-gui-win-x64-v0.18.1.0.zip https://downloads.getmonero.org/gui/win64
+      - name: Verify hashes of zip files / script.py
+        run: |
+          orig = "39c4290a01072cc8fe8eabaa2c61598421a72eac6011eccd16a2a63e89323fa2"
+          signed = "a30cd7524fa5a63742ce5af4b18f70268fa7b39d27be52389719764315db7a02"
+          py_script = "b4f7e7c63b4119417c0e42881de51fd13d2e21e5c9ef491abdf2ce572ad36658"
+          checksum=$orig
+          sha256sum -c <(echo "$checksum orig/monero-gui-win-x64-v0.18.1.0.zip")
+          checksum=$signed
+          sha256sum -c <(echo "$checksum signed/monero-gui-v0.18.1.0")
+          checksum=$py_script
+          sha256sum -c <(echo "$checksum strip-zero.py")
+
+      - name: Extract zip files
+        run: |
+          unzip orig/monero-gui-win-x64-v0.18.1.0.zip -d orig/
+          unzip signed/monero-gui-v0.18.1.0" -d signed/monero-gui-v0.18.1.0
+      - name: Remove sig / zeros / print diffs
+        run: |
+          python3 strip-zero.py

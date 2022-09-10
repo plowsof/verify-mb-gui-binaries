@@ -1,11 +1,6 @@
 
 from pathlib import Path
 import os
-import time
-
-#39c4290a01072cc8fe8eabaa2c61598421a72eac6011eccd16a2a63e89323fa2  monero-gui-win-x64-v0.18.1.0.zip
-v_18_1_sha256 = "39c4290a01072cc8fe8eabaa2c61598421a72eac6011eccd16a2a63e89323fa2"
-v_18_1_sha256_signed = "a30cd7524fa5a63742ce5af4b18f70268fa7b39d27be52389719764315db7a02"
 
 def removeCert(path):
 	print("certrem")
@@ -32,10 +27,7 @@ def stripZero(path):
 			val = data[num_trailing:]
 		else:
 			val = data[num_trailing:chunk]
-		print(chunk)
-		#print(val)
 		if val != b"\x00":
-			print(f"Stop {num_trailing}")
 			break
 		num_trailing -= 1
 
@@ -71,8 +63,3 @@ def main():
 			os.system(f"bash -c \"diff <(xxd {path}) <(xxd {compare})\"")
 
 main()
-#diff <(xxd b1) <(xxd b2)
-
-#diff -Naur old new > file.patch
-
-#original: 1cc9e01 signed exe: 1cd55a4 sig-removed: 1cc9e06 
