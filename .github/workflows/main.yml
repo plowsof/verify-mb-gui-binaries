@@ -39,7 +39,7 @@ jobs:
       - name: Extract zip files
         run: |
           unzip orig/monero-gui-win-x64-v0.18.1.0.zip -d orig/
-          unzip signed/monero-gui-v0.18.1.0" -d signed/monero-gui-v0.18.1.0
+          unzip signed/monero-gui-v0.18.1.0.zip -d signed/monero-gui-v0.18.1.0
       - name: Remove sig / zeros / print diffs
         run: |
           python3 strip-zero.py
