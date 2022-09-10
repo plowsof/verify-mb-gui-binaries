@@ -49,8 +49,23 @@ In the workflow script , we can see the 06 -> 01 difference [here](https://githu
 
 ![Screenshot from 2022-09-10 15-10-38](https://user-images.githubusercontent.com/77655812/189487826-ebb8d97a-99ef-4c15-85ae-23a5adcd6590.png)
 
+### Hash signed by Plowsof
 
+```
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
+a30cd7524fa5a63742ce5af4b18f70268fa7b39d27be52389719764315db7a02  monero-gui-v0.18.1.0.zip
+
+-----BEGIN PGP SIGNATURE-----
+
+iI0EARMIADUWIQTci88MUIPyAweCgD5OipEtQO0FLAUCYxymUBcccGxvd3NvZkBw
+cm90b25tYWlsLmNvbQAKCRBOipEtQO0FLPqYAQCYe+KBkcHOCA7h9+w3tWdxGtAV
+izD9SgPuEPkf1568HwD8D3dTR4EU82ZMqyVmyZdE///WTCmKG5Ks3CVB3smPp6Y=
+=N8v/
+-----END PGP SIGNATURE-----
+
+```
 
 
 
