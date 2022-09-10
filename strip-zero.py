@@ -56,7 +56,7 @@ def main():
 		compare = str(path).replace("orig","signed")
 		compare += ".nosig.nozero"
 		if os.path.isfile(compare):
-			os.system(f"echo \"{path}\"")
+			os.system(f"echo {path}")
 			os.system(f"bash -c \"diff <(xxd {path}) <(xxd {compare})\"")
 
 main()
