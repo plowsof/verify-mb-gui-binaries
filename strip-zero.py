@@ -3,9 +3,8 @@ from pathlib import Path
 import os
 
 def removeCert(path):
-	print("certrem")
-	print(path)
 	out = str(path) + ".nosig"
+	os.system(f"echo \"Remove signature from: {path}\"")
 	os.system(f"osslsigncode remove-signature {path} {out}")
 
 def stripZero(path):
@@ -18,7 +17,6 @@ def stripZero(path):
 
 	while True:
 		# continue until we find a none 00 char
-		print(num_trailing)
 		if num_trailing < -10:
 			break
 		chunk = num_trailing
@@ -34,11 +32,11 @@ def stripZero(path):
 	num_trailing += 2
 	new_path = str(path) + ".nozero"
 	if num_trailing == 0:
-		print(f"no padding detected in {path}")
+		os.system(f"echo \"no padding detected in {path}\"")
 		#rename the file instead
 		os.rename(path,new_path)
 	else:
-		print(f"{path} Trailing zeros to be deleted: {data[num_trailing:]}")
+		os.system(f"echo \"{path} Trailing zeros to be deleted: {data[num_trailing:]}\"")
 		#remove old file
 		os.remove(path)
 		with open(new_path, "wb+") as f:
@@ -50,7 +48,6 @@ def main():
 
 	for path in Path('signed').rglob('*.nosig'):
 		if "export" in str(path):
-			print(path)
 			stripZero(path)
 		else:
 			stripZero(path)
@@ -58,8 +55,8 @@ def main():
 	for path in Path("orig").rglob("*.exe"):
 		compare = str(path).replace("orig","signed")
 		compare += ".nosig.nozero"
-		print(compare)
 		if os.path.isfile(compare):
+			os.system(f"echo \"{path}\"")
 			os.system(f"bash -c \"diff <(xxd {path}) <(xxd {compare})\"")
 
 main()
