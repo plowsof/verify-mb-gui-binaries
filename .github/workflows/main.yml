@@ -32,7 +32,7 @@ jobs:
           checksum=$orig
           sha256sum -c <(echo "$checksum orig/monero-gui-win-x64-v0.18.1.0.zip")
           checksum=$signed
-          sha256sum -c <(echo "$checksum signed/monero-gui-v0.18.1.0")
+          sha256sum -c <(echo "$checksum signed/monero-gui-v0.18.1.0.zip")
           checksum=$py_script
           sha256sum -c <(echo "$checksum strip-zero.py")
 
