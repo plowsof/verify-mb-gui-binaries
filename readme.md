@@ -45,3 +45,4 @@ Original blockchain-export.exe does not need any padding at the end and thus the
 
 I am satisfied beyond all resonable doubt that these files are original, un-altered, signed Monero executables and have no problem in signing the hash value of the zip file with my pgp key. I will also create a workflows script to prove my findings.
 
+In the workflow script , we can see the 06 -> 01 difference [here](https://github.com/plowsof/verify-mb-gui-binaries/runs/8285192387?check_suite_focus=true#step:7:55)
