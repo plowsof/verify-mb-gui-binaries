@@ -28,7 +28,7 @@ jobs:
         run: |
           orig="39c4290a01072cc8fe8eabaa2c61598421a72eac6011eccd16a2a63e89323fa2"
           signed="a30cd7524fa5a63742ce5af4b18f70268fa7b39d27be52389719764315db7a02"
-          py_script="b4f7e7c63b4119417c0e42881de51fd13d2e21e5c9ef491abdf2ce572ad36658"
+          py_script="1d0631c698b677c5f3b26f5318e1eb6a118894372f8e7cf3da54915a6d44bc37"
           checksum=$orig
           sha256sum -c <(echo "$checksum orig/monero-gui-win-x64-v0.18.1.0.zip")
           checksum=$signed
