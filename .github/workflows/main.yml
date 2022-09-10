@@ -42,4 +42,5 @@ jobs:
           unzip signed/monero-gui-v0.18.1.0.zip -d signed/monero-gui-v0.18.1.0
       - name: Remove sig / zeros / print diffs
         run: |
-          python3 strip-zero.py
+          output=$(python3 strip-zero.py)
+          echo $output
