@@ -22,8 +22,8 @@ jobs:
           sudo apt-get install -y osslsigncode unzip
       - name: Download zips
         run: |
-          wget -O signed/monero-gui-v0.18.1.0.zip https://p2pcrowd.fund/monero-gui-v0.18.1.0.zip
-          wget -O orig/monero-gui-win-x64-v0.18.1.0.zip https://downloads.getmonero.org/gui/win64
+          wget -q -O signed/monero-gui-v0.18.1.0.zip https://p2pcrowd.fund/monero-gui-v0.18.1.0.zip
+          wget -q -O orig/monero-gui-win-x64-v0.18.1.0.zip https://downloads.getmonero.org/gui/win64
       - name: Verify hashes of zip files / script.py
         run: |
           orig="39c4290a01072cc8fe8eabaa2c61598421a72eac6011eccd16a2a63e89323fa2"
