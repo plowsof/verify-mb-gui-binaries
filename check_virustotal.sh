@@ -27,6 +27,7 @@ get_ids() {
 	for f in $(find "$folder" -name '*.exe'); do
 		then=$(date +%s)
 		id=$(upload_file $f | jq -r .data.id)
+		echo "${id} ${f}"
 		#get filename from path
 		basename "$f"
 		fname="$(basename -- $f)"
@@ -41,7 +42,6 @@ get_ids() {
 		if [ $wait -lt 0 ]; then
 			wait=0
 		fi
-		echo $wait
 		sleep $wait
 	done
 }
@@ -59,14 +59,17 @@ get_ids signed a_signed hashes_signed
 echo "| Filename | non-signed | signed |"
 echo "| --- | --- | --- |"
 
+sleep 15
+#1 api call every 15 seconds
+
 for key in "${!a_orig[@]}"; do
+	then=$(date +%s)
 	#signed will have the same keys as orig
     id_orig=${a_orig[$key]}
 	get_stats=$(get_analysis $id_orig)
 	sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
 	mal=$(echo $get_stats | jq -r .data.attributes.stats.malicious)
 	total_orig=$((sus+=mal))
-
 	id_signed=${a_signed[$key]}
 	get_stats=$(get_analysis $id_signed)
 	sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
@@ -74,6 +77,11 @@ for key in "${!a_orig[@]}"; do
 	total_signed=$((sus+=mal))
 	h_orig="${hashes_orig[$key]}"
 	h_sig="${hashes_signed[$key]}"
-	echo "| $key | [$total_orig}](https://www.virustotal.com/gui/file/${h_orig}/detection) | [${total_signed}](https://www.virustotal.com/gui/file/${h_sig}/detection) |"
-
+	echo "| $key | [$total_orig](https://www.virustotal.com/gui/file/${h_orig}/detection) | [${total_signed}](https://www.virustotal.com/gui/file/${h_sig}/detection) |"
+	wait=30
+	((wait-=$now))
+	if [ $wait -lt 0 ]; then
+		wait=0
+	fi
+	sleep $wait
 done
