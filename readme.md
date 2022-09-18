@@ -76,7 +76,7 @@ izD9SgPuEPkf1568HwD8D3dTR4EU82ZMqyVmyZdE///WTCmKG5Ks3CVB3smPp6Y=
 ```
 
 
-### VirusTotal results
+### VirusTotal results 2022-09-18 v0-18-1-0
 | Filename | non-signed | signed |
 | --- | --- | --- |
 | monero-blockchain-import.exe | [30](https://www.virustotal.com/gui/file/cdc39cca213e920625617b09dcd5b4c73d6c81413ada4e27f91051e112ebec4f/detection) | [19](https://www.virustotal.com/gui/file/6577728de8ce52598c8905dcb3fce439186ab92ce2d65275cd0453262028c749/detection) |
