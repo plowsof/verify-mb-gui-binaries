@@ -7,8 +7,8 @@ vtotal_endpoint="https://www.virustotal.com/api/v3/"
 mkdir signed
 mkdir orig 
 
-#unzip "${signed_monero_zip}.zip" -d signed
-#unzip "${monero_zip}.zip" -d orig
+unzip "${signed_monero_zip}.zip" -d signed
+unzip "${monero_zip}.zip" -d orig
 
 #if the file exists dont upload, just grab hits
 check_exists() {
@@ -29,12 +29,12 @@ upload_file() {
 	f="$1"
 	hash=($(sha256sum ${f}))
 	data=$(check_exists $hash)
-	if [ $(echo $data | jq -r .data[].arrtibutes) ]; then
+	if grep -q "attributes" <<< "$data" ; then
 		#echo $data
 		sus=$(echo $data | jq -r .data[].attributes.last_analysis_stats.suspicious)
 		mal=$(echo $data | jq -r .data[].attributes.last_analysis_stats.malicious)
 		total=$((sus+=mal))
-		existing_hash+=([$hash]=$total)
+		echo "${total}\n£/\n${hash}"
 	else
 		#we dont exist
 		fsize=$(stat -c%s "$f")
@@ -98,7 +98,12 @@ get_ids() {
 	declare -n hashes="$3"
 	folder="$1"
 	for f in $(find "$folder" -name '*.exe'); do
-		id=$(upload_file $f | jq -r .data.id)
+		id=$(upload_file $f)
+		if grep -q "£/" <<< "$id" ; then
+			echo "$id"
+		else
+			id=$(echo $id | jq -r .data.id)
+		fi
 		echo $id
 		#echo "${id} ${f}"
 		#get filename from path
@@ -113,49 +118,54 @@ get_ids() {
 	done
 }
 
-main(){
-	declare -A a_orig
-	declare -A a_signed
+declare -A a_orig
+declare -A a_signed
 
-	declare -A hashes_orig
-	declare -A hashes_signed
+declare -A hashes_orig
+declare -A hashes_signed
 
-	declare -A existing_hash
+declare -A existing_hash
+get_ids orig a_orig hashes_orig
+get_ids signed a_signed hashes_signed
 
-	get_ids orig a_orig hashes_orig
-	get_ids signed a_signed hashes_signed
+printf "%s\n" "${!existing_hash[@]}"
+
+echo "| Filename | non-signed | signed |"
+echo "| --- | --- | --- |"
+
+#1 api call every 15 seconds
+
+for key in "${!a_orig[@]}"; do
+	#signed will have the same keys as orig
+    id_orig=${a_orig[$key]}
+    h_orig="${hashes_orig[$key]}"
+	if grep -q "£/" <<< "$id_orig" ; then
+		IFS='\n' y=($id_orig)
+    	echo "we exitst"
+    	total_orig=${y[0]}
+    	echo "total = $total_orig"
+    else
+		get_stats=$(get_analysis $id_orig)
+		sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
+		mal=$(echo $get_stats | jq -r .data.attributes.stats.malicious)
+		total_orig=$((sus+=mal))
+    fi
+
+	id_signed=${a_signed[$key]}
+	h_sig="${hashes_signed[$key]}"
+	if grep -q "£/" <<< "$id_signed" ; then
+		IFS='\n' y=($id_signed)
+    	echo "we exitst"
+    	total_signed=${y[0]}
+    	echo "total = $total_signed"
+    else
+		get_stats=$(get_analysis $id_signed)
+		sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
+		mal=$(echo $get_stats | jq -r .data.attributes.stats.malicious)
+		total_signed=$((sus+=mal))
+    fi	
+	echo "| $key | [$total_orig](https://www.virustotal.com/gui/file/${h_orig}/detection) | [${total_signed}](https://www.virustotal.com/gui/file/${h_sig}/detection) |"
+done
 
 
-	echo "| Filename | non-signed | signed |"
-	echo "| --- | --- | --- |"
-
-	#1 api call every 15 seconds
-
-	for key in "${!a_orig[@]}"; do
-		#signed will have the same keys as orig
-	    id_orig=${a_orig[$key]}
-	    h_orig="${hashes_orig[$key]}"
-	    if [ existing_hash[$h_orig] ]; then
-	    	total_orig=${existing_hash[$h_orig]}
-	    else
-			get_stats=$(get_analysis $id_orig)
-			sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
-			mal=$(echo $get_stats | jq -r .data.attributes.stats.malicious)
-			total_orig=$((sus+=mal))
-	    fi
-
-		id_signed=${a_signed[$key]}
-		h_sig="${hashes_signed[$key]}"
-	    if [ existing_hash[$h_sig] ]; then
-	    	total_signed=${existing_hash[$h_sig]}
-	    else
-			get_stats=$(get_analysis $id_signed)
-			sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
-			mal=$(echo $get_stats | jq -r .data.attributes.stats.malicious)
-			total_signed=$((sus+=mal))
-	    fi	
-		echo "| $key | [$total_orig](https://www.virustotal.com/gui/file/${h_orig}/detection) | [${total_signed}](https://www.virustotal.com/gui/file/${h_sig}/detection) |"
-	done
-}
-
-main
+# if we exist , upload 
