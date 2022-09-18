@@ -100,11 +100,10 @@ get_ids() {
 	for f in $(find "$folder" -name '*.exe'); do
 		id=$(upload_file $f)
 		if grep -q "£/" <<< "$id" ; then
-			echo "$id"
+			hello="world"
 		else
 			id=$(echo $id | jq -r .data.id)
 		fi
-		echo $id
 		#echo "${id} ${f}"
 		#get filename from path
 		basename "$f"
@@ -141,9 +140,7 @@ for key in "${!a_orig[@]}"; do
     h_orig="${hashes_orig[$key]}"
 	if grep -q "£/" <<< "$id_orig" ; then
 		IFS='\n' y=($id_orig)
-    	echo "we exitst"
     	total_orig=${y[0]}
-    	echo "total = $total_orig"
     else
 		get_stats=$(get_analysis $id_orig)
 		sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
@@ -155,9 +152,7 @@ for key in "${!a_orig[@]}"; do
 	h_sig="${hashes_signed[$key]}"
 	if grep -q "£/" <<< "$id_signed" ; then
 		IFS='\n' y=($id_signed)
-    	echo "we exitst"
     	total_signed=${y[0]}
-    	echo "total = $total_signed"
     else
 		get_stats=$(get_analysis $id_signed)
 		sus=$(echo $get_stats | jq -r .data.attributes.stats.suspicious)
